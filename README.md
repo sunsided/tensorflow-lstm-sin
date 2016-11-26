@@ -62,3 +62,28 @@ optimizer = adam.apply_gradients(clipped_gradients)
 Losses get as low as `0.069027` within the given iterations, but vary wildly.
 
 ![](images/tf-recurrent-sin-4.jpg)
+
+## Experiment 5
+
+This time, the `dynamic_rnn()` function is used instead of `rnn()`, drastically improving the 
+startup time. The single LSTM cell has been replaced with `n_layers = 4` stacked LSTM cells of `n_hidden = 32` hidden
+states each.
+
+```python
+lstm_cell = rnn_cell.BasicLSTMCell(n_hidden, forget_bias=1.0)
+lstm_cells = [lstm_cell]*n_layers
+stacked_lstm = rnn_cell.MultiRNNCell(lstm_cells)
+outputs, states = rnn.dynamic_rnn(stacked_lstm, x, dtype=tf.float32, time_major=False)
+```
+
+The output still uses linear regression:
+
+```python
+output = tf.transpose(outputs, [1, 0, 2])
+pred = tf.matmul(output[-1], weights['out']) + biases['out']
+```
+
+The network is trained with learning rate `0.001` for `300000` iterations. The following
+picture shows the performance at loss `0.325863`.
+
+![](images/tf-recurrent-sin-5.jpg)

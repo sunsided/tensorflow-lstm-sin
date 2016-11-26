@@ -1,12 +1,11 @@
 '''
 A Recurrent Neural Network (LSTM) implementation example using TensorFlow library.
-Inspired by https://github.com/aymericdamien/TensorFlow-Examples/
+Inspired by https://github.com/aymericdamien/TensorFlow-Examples/ and http://mourafiq.com/2016/05/15/predicting-sequences-using-rnn-in-tensorflow.html
 '''
 
 from __future__ import print_function
 
 from generate_sample import generate_sample
-from rnn import RNN
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,22 +13,24 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 import tensorflow as tf
+from tensorflow.python.ops import rnn, rnn_cell
 
 # Parameters
 learning_rate = 0.001
-training_iters = 500000
+training_iters = 300000
 batch_size = 50
 display_step = 100
 
 # Network Parameters
-n_input = 1  # input is sin(x)
+n_input = 1  # input is sin(x), a scalar
 n_steps = 25  # timesteps
-n_hidden = 500  # hidden layer num of features
-n_outputs = 100  # output is sin(x+1)
+n_hidden = 32  # hidden layer num of features
+n_outputs = 100  # output is a series of sin(x+...)
+n_layers = 4  # number of stacked LSTM layers
 
 # tf Graph input
-x = tf.placeholder("float", [None, n_steps, n_input])
-y = tf.placeholder("float", [None, n_outputs])
+x = tf.placeholder(tf.float32, [None, n_steps, n_input])
+y = tf.placeholder(tf.float32, [None, n_outputs])
 
 # Define weights
 weights = {
@@ -39,18 +40,19 @@ biases = {
     'out': tf.Variable(tf.random_normal([n_outputs]))
 }
 
-pred = RNN(x, weights, biases, n_input, n_steps, n_hidden)
+# Define the LSTM cells
+lstm_cell = rnn_cell.BasicLSTMCell(n_hidden, forget_bias=1.0)
+lstm_cells = [lstm_cell]*n_layers
+stacked_lstm = rnn_cell.MultiRNNCell(lstm_cells)
+outputs, states = rnn.dynamic_rnn(stacked_lstm, x, dtype=tf.float32, time_major=False)
+
+h = tf.transpose(outputs, [1, 0, 2])
+pred = tf.matmul(h[-1], weights['out']) + biases['out']
 
 # Define loss (Euclidean distance) and optimizer
 individual_losses = tf.reduce_sum(tf.square(tf.sub(pred, y)), reduction_indices=1)
 loss = tf.reduce_mean(individual_losses)
-
-# apply gradient clipping
-# see http://stackoverflow.com/a/36501922/195651
-adam = tf.train.AdamOptimizer(learning_rate=learning_rate)
-gradients = adam.compute_gradients(loss)
-clipped_gradients = [(tf.clip_by_value(grad, -0.5, 0.5), var) for grad, var in gradients]
-optimizer = adam.apply_gradients(clipped_gradients)
+optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
 
 # Initializing the variables
 init = tf.global_variables_initializer()

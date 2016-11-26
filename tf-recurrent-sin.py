@@ -57,7 +57,6 @@ with tf.Session() as sess:
     while step * batch_size < training_iters:
         _, batch_x, __, batch_y = generate_sample(f=1.0, t0=None, batch_size=batch_size, samples=n_steps, predict=n_outputs)
 
-        # Reshape data to get 28 seq of 28 elements
         batch_x = batch_x.reshape((batch_size, n_steps, n_input))
         batch_y = batch_y.reshape((batch_size, n_outputs))
 
@@ -87,6 +86,7 @@ with tf.Session() as sess:
         prediction = prediction.squeeze()
 
         plt.plot(t, y, color='black')
+        plt.plot(np.append(t[-1], next_t), np.append(y[-1], expected_y), color='green')
         plt.plot(np.append(t[-1], next_t), np.append(y[-1], prediction), color='red')
         plt.ylim([-1, 1])
         plt.xlabel('time [t]')

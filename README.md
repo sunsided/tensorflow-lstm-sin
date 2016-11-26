@@ -21,11 +21,13 @@ batches of `50` examples.
 Given a single LSTM cell with `150` hidden states, predict the next `50` timesteps 
 given the last `100` timesteps. 
 
-The network is trained on sines of random frequencies between `0.5 Hz` and `4 Hz` using 
+The network is trained on sines of random frequencies between `0.5 .. 4 Hz` using 
 random shifts. Prediction quality is worse than for the `1 Hz` only experiment above,
 but it generalizes to the `2 Hz` and `3 Hz` tests.
 It was optimized with a learning rate of `0.001` for `300000` iterations and 
 batches of `50` examples.
+
+At loss `0.614914`, the prediction looks like this:
 
 ![](images/tf-recurrent-sin-2.jpg)
 
@@ -40,10 +42,14 @@ but it generalizes to the `2 Hz` and `3 Hz` tests.
 It was optimized with a learning rate of `0.0005` for `500000` iterations and 
 batches of `50` examples.
 
+The following image shows the output at loss `0.177742`:
+
 ![](images/tf-recurrent-sin-3.jpg)
 
 The following is the network trained to predict the next `100` timesteps
 given the previous `25` timesteps; the parameters are otherwise unchanged.
+
+This is the result at loss `0.257725`:
 
 ![](images/tf-recurrent-sin-3.1.jpg)
 
@@ -60,14 +66,15 @@ optimizer = adam.apply_gradients(clipped_gradients)
 ```
 
 Losses get as low as `0.069027` within the given iterations, but vary wildly.
+This is at loss `0.422188`:
 
 ![](images/tf-recurrent-sin-4.jpg)
 
 ## Experiment 5
 
 This time, the `dynamic_rnn()` function is used instead of `rnn()`, drastically improving the 
-startup time. The single LSTM cell has been replaced with `n_layers = 4` stacked LSTM cells of `n_hidden = 32` hidden
-states each.
+startup time. In addition, the single LSTM cell has been replaced with `n_layers = 4` stacked 
+LSTM cells of `n_hidden = 32` hidden states each.
 
 ```python
 lstm_cell = rnn_cell.BasicLSTMCell(n_hidden, forget_bias=1.0)
@@ -83,7 +90,9 @@ output = tf.transpose(outputs, [1, 0, 2])
 pred = tf.matmul(output[-1], weights['out']) + biases['out']
 ```
 
-The network is trained with learning rate `0.001` for `300000` iterations. The following
-picture shows the performance at loss `0.325863`.
+The network is trained with learning rate `0.001` for at least `300000` iterations
+(with the additional criterion that the loss should be below `0.15`).
+
+The following picture shows the performance at loss `0.138701` at iteration `375000`.
 
 ![](images/tf-recurrent-sin-5.jpg)

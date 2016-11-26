@@ -61,8 +61,12 @@ init = tf.global_variables_initializer()
 with tf.Session() as sess:
     sess.run(init)
     step = 1
+
+    loss_value = None
+    target_loss = 0.15
+
     # Keep training until reach max iterations
-    while step * batch_size < training_iters:
+    while step * batch_size < training_iters or loss_value > target_loss:
         _, batch_x, __, batch_y = generate_sample(f=None, t0=None, batch_size=batch_size, samples=n_steps, predict=n_outputs)
 
         batch_x = batch_x.reshape((batch_size, n_steps, n_input))
@@ -94,7 +98,7 @@ with tf.Session() as sess:
         prediction = prediction.squeeze()
 
         plt.plot(t, y, color='black')
-        plt.plot(np.append(t[-1], next_t), np.append(y[-1], expected_y), color='green')
+        plt.plot(np.append(t[-1], next_t), np.append(y[-1], expected_y), color='green', linestyle=':')
         plt.plot(np.append(t[-1], next_t), np.append(y[-1], prediction), color='red')
         plt.ylim([-1, 1])
         plt.xlabel('time [t]')

@@ -92,7 +92,7 @@ with tf.Session() as sess:
         prediction = prediction.squeeze()
 
         plt.plot(t, y, color='black')
-        plt.plot(np.append(t[-1], next_t), np.append(y[-1], expected_y), color='green')
+        plt.plot(np.append(t[-1], next_t), np.append(y[-1], expected_y), color='green', linestyle=':')
         plt.plot(np.append(t[-1], next_t), np.append(y[-1], prediction), color='red')
         plt.ylim([-1, 1])
         plt.xlabel('time [t]')

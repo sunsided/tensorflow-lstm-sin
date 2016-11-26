@@ -1,6 +1,6 @@
 # TensorFlow LSTM sin(t) Example
 
-Single-layer LSTM network with no output nonlinearity.
+Single-layer LSTM network with no output nonlinearity based on [aymericdamien's TensorFlow examples](https://github.com/aymericdamien/TensorFlow-Examples/) 
 All networks have been optimized using ADAM on the MSE loss function.
 
 ## Experiment 1

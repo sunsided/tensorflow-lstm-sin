@@ -1,7 +1,7 @@
 # TensorFlow LSTM sin(t) Example
 
 Single-layer LSTM network with no output nonlinearity based on [aymericdamien's TensorFlow examples](https://github.com/aymericdamien/TensorFlow-Examples/). 
-All networks have been optimized using ADAM on the MSE loss function.
+All networks have been optimized using [Adam](https://arxiv.org/abs/1412.6980) on the MSE loss function.
 
 ## Experiment 1
 
@@ -73,8 +73,8 @@ This is at loss `0.422188`:
 ## Experiment 5
 
 This time, the `dynamic_rnn()` function is used instead of `rnn()`, drastically improving the 
-startup time. In addition, the single LSTM cell has been replaced with `n_layers = 4` stacked 
-LSTM cells of `n_hidden = 32` hidden states each.
+startup time. In addition, the single LSTM cell has been replaced with `4` stacked 
+LSTM cells of `32` hidden states each.
 
 ```python
 lstm_cell = rnn_cell.BasicLSTMCell(n_hidden, forget_bias=1.0)

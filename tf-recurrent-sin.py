@@ -1,9 +1,6 @@
 '''
 A Recurrent Neural Network (LSTM) implementation example using TensorFlow library.
-This example is using the MNIST database of handwritten digits (http://yann.lecun.com/exdb/mnist/)
-Long Short Term Memory paper: http://deeplearning.cs.cmu.edu/pdfs/Hochreiter97_lstm.pdf
-Author: Aymeric Damien
-Project: https://github.com/aymericdamien/TensorFlow-Examples/
+Inspired by https://github.com/aymericdamien/TensorFlow-Examples/
 '''
 
 from __future__ import print_function
@@ -78,10 +75,6 @@ pred = RNN(x, weights, biases)
 individual_losses = tf.reduce_sum(tf.square(tf.sub(pred, y)), reduction_indices=1)
 loss = tf.reduce_mean(individual_losses)
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
-
-# Evaluate model
-# correct_pred = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
-# accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
 # Initializing the variables
 init = tf.global_variables_initializer()

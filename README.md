@@ -96,3 +96,15 @@ The network is trained with learning rate `0.001` for at least `300000` iteratio
 The following picture shows the performance at loss `0.138701` at iteration `375000`.
 
 ![](images/tf-recurrent-sin-5.jpg)
+
+When using only `10` hidden states, training takes much longer given a learning rate of `0.001`
+and reaches a loss of about `0.5` after `~1200000` iterations, where convergence effectively stops.
+
+The following used `10` hidden states and a base learning rate of `0.005` in combination with a 
+step policy that reduced the learning rate by a factor of `0.1` every `250000` iterations.
+Similar to the previous experiment, optimization was stopped after at least `300000` iterations 
+have passed and the loss was below `0.2`.
+
+The picture shows the outcome after `510000` iterations at a loss of `0.180995`:
+
+![](images/tf-recurrent-sin-5.1.jpg)

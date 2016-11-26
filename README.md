@@ -1,6 +1,6 @@
 # TensorFlow LSTM sin(t) Example
 
-Single-layer LSTM network with no output nonlinearity based on [aymericdamien's TensorFlow examples](https://github.com/aymericdamien/TensorFlow-Examples/) 
+Single-layer LSTM network with no output nonlinearity based on [aymericdamien's TensorFlow examples](https://github.com/aymericdamien/TensorFlow-Examples/). 
 All networks have been optimized using ADAM on the MSE loss function.
 
 ## Experiment 1
@@ -46,3 +46,19 @@ The following is the network trained to predict the next `100` timesteps
 given the previous `25` timesteps; the parameters are otherwise unchanged.
 
 ![](images/tf-recurrent-sin-3.1.jpg)
+
+## Experiment 4
+
+Same as the last experiment, however using `500` hidden states and gradient clipping
+for the optimizer as described [here](http://stackoverflow.com/a/36501922/195651):
+
+```python
+adam = tf.train.AdamOptimizer(learning_rate=learning_rate)
+gradients = adam.compute_gradients(loss)
+clipped_gradients = [(tf.clip_by_value(grad, -0.5, 0.5), var) for grad, var in gradients]
+optimizer = adam.apply_gradients(clipped_gradients)
+```
+
+Losses get as low as `0.069027` within the given iterations, but vary wildly.
+
+![](images/tf-recurrent-sin-4.jpg)

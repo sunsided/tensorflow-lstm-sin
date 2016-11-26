@@ -1,7 +1,7 @@
-"""
+'''
 A Recurrent Neural Network (LSTM) implementation example using TensorFlow library.
 Inspired by https://github.com/aymericdamien/TensorFlow-Examples/
-"""
+'''
 
 from __future__ import print_function
 
@@ -17,15 +17,15 @@ import tensorflow as tf
 
 # Parameters
 learning_rate = 0.001
-training_iters = 300000
+training_iters = 500000
 batch_size = 50
 display_step = 100
 
 # Network Parameters
 n_input = 1  # input is sin(x)
-n_steps = 100  # timesteps
-n_hidden = 150  # hidden layer num of features
-n_outputs = 50  # output is sin(x+1)
+n_steps = 25  # timesteps
+n_hidden = 500  # hidden layer num of features
+n_outputs = 100  # output is sin(x+1)
 
 # tf Graph input
 x = tf.placeholder("float", [None, n_steps, n_input])
@@ -44,7 +44,13 @@ pred = RNN(x, weights, biases, n_input, n_steps, n_hidden)
 # Define loss (Euclidean distance) and optimizer
 individual_losses = tf.reduce_sum(tf.square(tf.sub(pred, y)), reduction_indices=1)
 loss = tf.reduce_mean(individual_losses)
-optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
+
+# apply gradient clipping
+# see http://stackoverflow.com/a/36501922/195651
+adam = tf.train.AdamOptimizer(learning_rate=learning_rate)
+gradients = adam.compute_gradients(loss)
+clipped_gradients = [(tf.clip_by_value(grad, -0.5, 0.5), var) for grad, var in gradients]
+optimizer = adam.apply_gradients(clipped_gradients)
 
 # Initializing the variables
 init = tf.global_variables_initializer()

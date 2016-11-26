@@ -15,13 +15,6 @@ import seaborn as sns
 
 import tensorflow as tf
 
-
-'''
-To classify images using a recurrent neural network, we consider every image
-row as a sequence of pixels. Because MNIST image shape is 28*28px, we will then
-handle 28 sequences of 28 steps for every sample.
-'''
-
 # Parameters
 learning_rate = 0.0005
 training_iters = 500000

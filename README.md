@@ -14,7 +14,7 @@ network should be able to simply memoize the shape of the input.
 It was optimized with a learning rate of `0.001` for `200000` iterations and 
 batches of `50` examples.
 
-![](tf-recurrent-sin.jpg)
+![](images/tf-recurrent-sin.jpg)
 
 ## Experiment 2
 
@@ -27,7 +27,7 @@ but it generalizes to the `2 Hz` and `3 Hz` tests.
 It was optimized with a learning rate of `0.001` for `300000` iterations and 
 batches of `50` examples.
 
-![](tf-recurrent-sin-2.jpg)
+![](images/tf-recurrent-sin-2.jpg)
 
 ## Experiment 3
 
@@ -40,9 +40,9 @@ but it generalizes to the `2 Hz` and `3 Hz` tests.
 It was optimized with a learning rate of `0.0005` for `500000` iterations and 
 batches of `50` examples.
 
-![](tf-recurrent-sin-3.jpg)
+![](images/tf-recurrent-sin-3.jpg)
 
 The following is the network trained to predict the next `100` timesteps
 given the previous `25` timesteps; the parameters are otherwise unchanged.
 
-![](tf-recurrent-sin-3.1.jpg)
+![](images/tf-recurrent-sin-3.1.jpg)

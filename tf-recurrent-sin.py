@@ -42,7 +42,7 @@ biases = {
 pred = RNN(x, weights, biases, n_input, n_steps, n_hidden)
 
 # Define loss (Euclidean distance) and optimizer
-individual_losses = tf.reduce_sum(tf.square(tf.sub(pred, y)), reduction_indices=1)
+individual_losses = tf.reduce_sum(tf.squared_difference(pred, y), reduction_indices=1)
 loss = tf.reduce_mean(individual_losses)
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
 

@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 import tensorflow as tf
-from tensorflow.python.ops import rnn, rnn_cell
+from tensorflow.contrib import rnn
 
 # Parameters
 learning_rate = 0.001
@@ -41,16 +41,16 @@ biases = {
 }
 
 # Define the LSTM cells
-lstm_cell = rnn_cell.BasicLSTMCell(n_hidden, forget_bias=1.0)
+lstm_cell = rnn.BasicLSTMCell(n_hidden, forget_bias=1.0)
 lstm_cells = [lstm_cell]*n_layers
-stacked_lstm = rnn_cell.MultiRNNCell(lstm_cells)
-outputs, states = rnn.dynamic_rnn(stacked_lstm, x, dtype=tf.float32, time_major=False)
+stacked_lstm = rnn.MultiRNNCell(lstm_cells)
+outputs, states = tf.nn.dynamic_rnn(stacked_lstm, x, dtype=tf.float32, time_major=False)
 
 h = tf.transpose(outputs, [1, 0, 2])
 pred = tf.matmul(h[-1], weights['out']) + biases['out']
 
 # Define loss (Euclidean distance) and optimizer
-individual_losses = tf.reduce_sum(tf.square(tf.sub(pred, y)), reduction_indices=1)
+individual_losses = tf.reduce_sum(tf.squared_difference(pred, y), reduction_indices=1)
 loss = tf.reduce_mean(individual_losses)
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
 

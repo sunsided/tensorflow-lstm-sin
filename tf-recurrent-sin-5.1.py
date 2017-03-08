@@ -49,7 +49,7 @@ stacked_lstm = rnn.MultiRNNCell(lstm_cells)
 outputs, states = tf.nn.dynamic_rnn(stacked_lstm, x, dtype=tf.float32, time_major=False)
 
 h = tf.transpose(outputs, [1, 0, 2])
-pred = tf.matmul(h[-1], weights['out']) + biases['out']
+pred = tf.nn.bias_add(tf.matmul(h[-1], weights['out']), biases['out'])
 
 # Define loss (Euclidean distance) and optimizer
 individual_losses = tf.reduce_sum(tf.squared_difference(pred, y), reduction_indices=1)

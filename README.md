@@ -79,10 +79,10 @@ startup time. In addition, the single LSTM cell has been replaced with `4` stack
 LSTM cells of `32` hidden states each.
 
 ```python
-lstm_cell = rnn_cell.BasicLSTMCell(n_hidden, forget_bias=1.0)
+lstm_cell = rnn.BasicLSTMCell(n_hidden, forget_bias=1.0)
 lstm_cells = [lstm_cell]*n_layers
-stacked_lstm = rnn_cell.MultiRNNCell(lstm_cells)
-outputs, states = rnn.dynamic_rnn(stacked_lstm, x, dtype=tf.float32, time_major=False)
+stacked_lstm = rnn.MultiRNNCell(lstm_cells)
+outputs, states = tf.nn.dynamic_rnn(stacked_lstm, x, dtype=tf.float32, time_major=False)
 ```
 
 The output still uses linear regression:

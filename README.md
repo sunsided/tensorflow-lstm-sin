@@ -3,6 +3,8 @@
 Single- and multilayer LSTM networks with no additional output nonlinearity based on 
 [aymericdamien's TensorFlow examples](https://github.com/aymericdamien/TensorFlow-Examples/)
 and [Sequence prediction using recurrent neural networks](http://mourafiq.com/2016/05/15/predicting-sequences-using-rnn-in-tensorflow.html).
+
+Experiments with varying numbers of hidden units, LSTM cells and techniques like gradient clipping were conducted.
 All networks have been optimized using [Adam](https://arxiv.org/abs/1412.6980) on the MSE loss function.
 
 ## Experiment 1

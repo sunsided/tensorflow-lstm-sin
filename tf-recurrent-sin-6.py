@@ -1,5 +1,5 @@
 '''
-A Recurrent Neural Network (LSTM) implementation example using TensorFlow library.
+A Recurrent Neural Network (GRU) implementation example using TensorFlow library.
 Inspired by https://github.com/aymericdamien/TensorFlow-Examples/ and http://mourafiq.com/2016/05/15/predicting-sequences-using-rnn-in-tensorflow.html
 '''
 
@@ -17,9 +17,9 @@ from tensorflow.contrib import rnn
 
 # Parameters
 learning_rate = 0.005
-training_iters = 300000
+training_iters = 1000000
 training_iter_step_down_every = 250000
-batch_size = 50
+batch_size = 64
 display_step = 100
 
 # Network Parameters
@@ -27,7 +27,7 @@ n_input = 1  # input is sin(x), a scalar
 n_steps = 25  # time steps
 n_hidden = 10  # hidden layer num of features
 n_outputs = 100  # output is a series of sin(x+...)
-n_layers = 4  # number of stacked LSTM layers
+n_layers = 4  # number of stacked GRU layers
 
 # tf Graph input
 lr = tf.placeholder(tf.float32, [])
@@ -36,15 +36,15 @@ y = tf.placeholder(tf.float32, [None, n_outputs])
 
 # Define weights
 weights = {
-    'out': tf.Variable(tf.random_normal([n_hidden, n_outputs]))
+    'out': tf.Variable(tf.truncated_normal([n_hidden, n_outputs], stddev=1.0))
 }
 biases = {
-    'out': tf.Variable(tf.random_normal([n_outputs]))
+    'out': tf.Variable(tf.truncated_normal([n_outputs], stddev=0.1))
 }
 
-# Define the LSTM cells
-lstm_cells = [rnn.LSTMCell(n_hidden, forget_bias=1.0) for _ in range(n_layers)]
-stacked_lstm = rnn.MultiRNNCell(lstm_cells)
+# Define the GRU cells
+gru_cells = [rnn.GRUCell(n_hidden) for _ in range(n_layers)]
+stacked_lstm = rnn.MultiRNNCell(gru_cells)
 outputs, states = tf.nn.dynamic_rnn(stacked_lstm, inputs=x, dtype=tf.float32, time_major=False)
 
 h = tf.transpose(outputs, [1, 0, 2])
@@ -63,11 +63,11 @@ with tf.Session() as sess:
     sess.run(init)
     step = 1
 
-    loss_value = None
+    loss_value = float('+Inf')
     target_loss = 0.2
 
     # Keep training until reach max iterations
-    while step * batch_size < training_iters or loss_value > target_loss:
+    while (step * batch_size < training_iters) and (loss_value > target_loss):
         current_learning_rate = learning_rate
         current_learning_rate *= 0.1 ** ((step * batch_size) // training_iter_step_down_every)
 

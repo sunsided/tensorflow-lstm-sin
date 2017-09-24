@@ -111,3 +111,14 @@ have passed and the loss was below `0.2`.
 The picture shows the outcome after `510000` iterations at a loss of `0.180995`:
 
 ![](images/tf-recurrent-sin-5.1.jpg)
+
+## Experiment 6
+
+Much like the last experiment, this one uses `10` hidden states per layer
+in a `4` layer deep recurrent structure. Instead of using LSTM layers, however,
+this one uses GRUs.
+
+Because the loss did not go below `0.3`, training is stopped after `1000000`
+iterations. The picture shows the outcome at a loss of `0.327179`:
+
+![](images/tf-recurrent-sin-6.jpg)

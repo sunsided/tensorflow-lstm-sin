@@ -55,7 +55,8 @@ with tf.Session() as sess:
     step = 1
     # Keep training until reach max iterations
     while step * batch_size < training_iters:
-        _, batch_x, __, batch_y = generate_sample(f=1.0, t0=None, batch_size=batch_size, samples=n_steps, predict=n_outputs)
+        _, batch_x, __, batch_y = generate_sample(f=1.0, t0=None, batch_size=batch_size, samples=n_steps,
+                                                  predict=n_outputs)
 
         batch_x = batch_x.reshape((batch_size, n_steps, n_input))
         batch_y = batch_y.reshape((batch_size, n_outputs))
@@ -65,14 +66,14 @@ with tf.Session() as sess:
         if step % display_step == 0:
             # Calculate batch loss
             loss_value = sess.run(loss, feed_dict={x: batch_x, y: batch_y})
-            print("Iter " + str(step*batch_size) + ", Minibatch Loss= " + \
+            print("Iter " + str(step * batch_size) + ", Minibatch Loss= " +
                   "{:.6f}".format(loss_value))
         step += 1
     print("Optimization Finished!")
 
     # Test the prediction
     n_tests = 3
-    for i in range(1, n_tests+1):
+    for i in range(1, n_tests + 1):
         plt.subplot(n_tests, 1, i)
         t, y, next_t, expected_y = generate_sample(f=i, t0=None, samples=n_steps, predict=n_outputs)
 

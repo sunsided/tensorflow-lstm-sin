@@ -43,10 +43,9 @@ biases = {
 }
 
 # Define the LSTM cells
-lstm_cell = rnn.BasicLSTMCell(n_hidden, forget_bias=1.0)
-lstm_cells = [lstm_cell]*n_layers
+lstm_cells = [rnn.LSTMCell(n_hidden, forget_bias=1.0) for _ in range(n_layers)]
 stacked_lstm = rnn.MultiRNNCell(lstm_cells)
-outputs, states = tf.nn.dynamic_rnn(stacked_lstm, x, dtype=tf.float32, time_major=False)
+outputs, states = tf.nn.dynamic_rnn(stacked_lstm, inputs=x, dtype=tf.float32, time_major=False)
 
 h = tf.transpose(outputs, [1, 0, 2])
 pred = tf.nn.bias_add(tf.matmul(h[-1], weights['out']), biases['out'])

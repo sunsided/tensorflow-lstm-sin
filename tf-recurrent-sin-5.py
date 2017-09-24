@@ -1,7 +1,7 @@
-'''
+"""
 A Recurrent Neural Network (LSTM) implementation example using TensorFlow library.
 Inspired by https://github.com/aymericdamien/TensorFlow-Examples/ and http://mourafiq.com/2016/05/15/predicting-sequences-using-rnn-in-tensorflow.html
-'''
+"""
 
 from __future__ import print_function
 
@@ -41,10 +41,9 @@ biases = {
 }
 
 # Define the LSTM cells
-lstm_cell = rnn.BasicLSTMCell(n_hidden, forget_bias=1.0)
-lstm_cells = [lstm_cell]*n_layers
+lstm_cells = [rnn.LSTMCell(n_hidden, forget_bias=1.0) for _ in range(n_layers)]
 stacked_lstm = rnn.MultiRNNCell(lstm_cells)
-outputs, states = tf.nn.dynamic_rnn(stacked_lstm, x, dtype=tf.float32, time_major=False)
+outputs, states = tf.nn.dynamic_rnn(stacked_lstm, inputs=x, dtype=tf.float32, time_major=False)
 
 h = tf.transpose(outputs, [1, 0, 2])
 pred = tf.nn.bias_add(tf.matmul(h[-1], weights['out']), biases['out'])
@@ -65,19 +64,20 @@ with tf.Session() as sess:
     loss_value = None
     target_loss = 0.15
 
-    # Keep training until reach max iterations
+    # Keep training until we reach max iterations
     while step * batch_size < training_iters or loss_value > target_loss:
-        _, batch_x, __, batch_y = generate_sample(f=None, t0=None, batch_size=batch_size, samples=n_steps, predict=n_outputs)
+        _, batch_x, __, batch_y = generate_sample(f=None, t0=None, batch_size=batch_size,
+                                                  samples=n_steps, predict=n_outputs)
 
         batch_x = batch_x.reshape((batch_size, n_steps, n_input))
         batch_y = batch_y.reshape((batch_size, n_outputs))
 
-        # Run optimization op (backprop)
+        # Run optimization op (back propagation)
         sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
         if step % display_step == 0:
             # Calculate batch loss
             loss_value = sess.run(loss, feed_dict={x: batch_x, y: batch_y})
-            print("Iter " + str(step*batch_size) + ", Minibatch Loss= " + \
+            print("Iter " + str(step*batch_size) + ", Minibatch Loss= " +
                   "{:.6f}".format(loss_value))
         step += 1
     print("Optimization Finished!")

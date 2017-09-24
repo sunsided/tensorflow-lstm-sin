@@ -1,7 +1,7 @@
-'''
+"""
 A Recurrent Neural Network (GRU) implementation example using TensorFlow library.
 Inspired by https://github.com/aymericdamien/TensorFlow-Examples/ and http://mourafiq.com/2016/05/15/predicting-sequences-using-rnn-in-tensorflow.html
-'''
+"""
 
 from __future__ import print_function
 
